@@ -16,20 +16,6 @@ app.use(bodyParser.urlencoded({extended:true}));
 app.set("view engine", "ejs");
 
 
-/*Campground.create({
-    name : "Garnite Hills", 
-    image :"https://proxy.duckduckgo.com/iu/?u=https%3A%2F%2Fbutterloving.files.wordpress.com%2F2013%2F04%2Finks-lake-state-park-007.jpg&f=1",
-    description:"This is great Granite hill with no bathrooms, no water, Beautiful granite and a real adventure site"
-}, function(err, campground){
-    if(err){
-        console.log(err);
-    } else{
-        console.log(" NEWL CREATED CAPGROUND: ");
-        console.log(campground);
-    }
-})*/
-
-
 app.get("/",function(req,res){
     res.render("landing"); //'cause of the view engine writing ejs can be avoided  
 })
@@ -68,11 +54,14 @@ app.get("/campgrounds/new",function(req,res){
     res.render("new.ejs");
 });
 
+//SHOW ROUTE
+
 app.get("/campgrounds/:id", function(req, res){
-    Campground.findById(req.params.id, function(err, foundCampground){
+    Campground.findById(req.params.id).populate("comments").exec(function(err, foundCampground){
         if(err){
             console.log(err);
         } else {
+            console.log(foundCampground);
             res.render("show", {campground: foundCampground});
         }
     });

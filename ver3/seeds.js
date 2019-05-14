@@ -2,7 +2,7 @@ var mongoose = require("mongoose");
 var Campground = require("./models/campgrounds");
 var Comment = require("./models/comments");
 
-var data = [
+var campground = [
         {name : "Salmon Creek",  
         image : "https://proxy.duckduckgo.com/iu/?u=http%3A%2F%2Fd2y0su6ixv655t.cloudfront.net%2Fwp-content%2Fuploads%2F2016%2F03%2F16115458%2FNorth-Bend-Park-Campground.jpg&f=1",
         description: "blah blah blah"},
@@ -14,39 +14,32 @@ var data = [
 ]
 
 function seedDB(){
-    //remove all campgrounds
-    Campground.remove({}, function(err){
-    if(err){
-        console.log(err);
-    }
-    console.log("removed campgrounds!");
-});
-}
+    //add few campgrounds 
+    campground.forEach(function(seed){
+        Campground.create(seed, function(err, campground){
+            if(err){
+                console.log(err);
+            } else{
+                console.log("added a new camp!");
+                //create a comment
+                Comment.create({
+                    text: "This place is boring awesome",
+                    author: "Peter Pan"
+                }, function(err, comment){
+                    if(err){
+                        console.log(err);
+                    } else {
+                        campground.comments.push(comment);
+                        campground.save();
+                        console.log("created a comment");
+                    }
+                })
+            }
+        })
+    })
 
-//add few campgrounds 
+ }
 
- data.forEach(function(seed){
-     Campground.create(seed, function(err, campground){
-         if(err){
-             console.log(err);
-         } else{
-             console.log("added a new camp!");
-             //create a comment
-             Comment.create({
-                 text: "This place is boring awesome",
-                 author: "Peter Pan"
-             }, function(err, comment){
-                 if(err){
-                     console.log(err);
-                 } else {
-                     campground.comments.push(comment);
-                    campground.save();
-                    console.log("created a comment");
-                 }
-             })
-         }
-     })
- })
 
 module.exports  = seedDB;
 
