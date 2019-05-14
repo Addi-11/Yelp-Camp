@@ -3,7 +3,7 @@ var express = require("express"),
  bodyParser = require("body-parser"),
    mongoose = require("mongoose")
 
-mongoose.connect("mongodb://localhost/yelp_camp");   
+mongoose.connect("mongodb://localhost/yelp_camp", {useNewUrlParser: true});   
 
 app.use(bodyParser.urlencoded({extended:true}));
 
@@ -12,14 +12,16 @@ app.set("view engine", "ejs");
 // SCHEMA SETUP
 var capmpgroundSchema = new mongoose.Schema({
     name: String,
-    image: String
+    image: String,
+    description: String
 });
 
 var Campground = mongoose.model("Campground", capmpgroundSchema);
 
 /*Campground.create({
     name : "Garnite Hills", 
-    image :"https://proxy.duckduckgo.com/iu/?u=https%3A%2F%2Fbutterloving.files.wordpress.com%2F2013%2F04%2Finks-lake-state-park-007.jpg&f=1"
+    image :"https://proxy.duckduckgo.com/iu/?u=https%3A%2F%2Fbutterloving.files.wordpress.com%2F2013%2F04%2Finks-lake-state-park-007.jpg&f=1",
+    description:"This is great Granite hill with no bathrooms, no water, Beautiful granite and a real adventure site"
 }, function(err, campground){
     if(err){
         console.log(err);
@@ -56,17 +58,18 @@ app.get("/campgrounds",function(req,res){
         if(err){
             console.log(err);
         } else{
-             res.render("campgrounds",{campgrounds:allcampgrounds}); //name of data as to be collected: name of data to be passed
+             res.render("index",{campgrounds:allcampgrounds}); //name of data as to be collected: name of data to be passed
         }
     })
 });
 
 app.post("/campgrounds",function(req,res){
 
-    //add data to the campgrounds array
+    //add data to the campgrounds db
     var name = req.body.name;
     var image = req.body.image;
-    var newCampground = {name : name, image : image};
+    var desc = req.body.description;
+    var newCampground = {name : name, image : image, description : desc}
     
     Campground.create(newCampground, function(err , newlyCreated){
         if(err){
@@ -82,6 +85,15 @@ app.get("/campgrounds/new",function(req,res){
     res.render("new.ejs");
 });
 
+app.get("/campgrounds/:id", function(req, res){
+    Campground.findById(req.params.id, function(err, foundCampground){
+        if(err){
+            console.log(err);
+        } else {
+            res.render("show", {campground: foundCampground});
+        }
+    });
+})
 app.listen(8080,'localhost', function(){
    console.log("Yelp Camp Server has Begun!!");
 });
