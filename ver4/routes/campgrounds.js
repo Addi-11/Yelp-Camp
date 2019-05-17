@@ -14,7 +14,7 @@ router.get("/campgrounds",function(req,res){
     })
 });
 
-router.post("/campgrounds",function(req,res){
+router.post("/campgrounds",isLoggedIn,function(req,res){
 
     //add data to the campgrounds db
     var name = req.body.name;
@@ -32,7 +32,7 @@ router.post("/campgrounds",function(req,res){
     });
 });
 
-router.get("/campgrounds/new",function(req,res){
+router.get("/campgrounds/new",isLoggedIn, function(req,res){
     res.render("campgrounds/new");
 });
 
@@ -48,5 +48,12 @@ router.get("/campgrounds/:id", function(req, res){
         }
     });
 })
+
+function isLoggedIn(req,res, next){ 
+    if(req.isAuthenticated()){
+        return next();
+    }
+    res.redirect("/login");
+}
 
 module.exports = router;
