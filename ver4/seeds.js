@@ -21,7 +21,6 @@ function seedDB(){
             if(err){
                 console.log(err);
             } else{
-                console.log("added a new camp!");
                 //create a comment
                 Comment.create({
                     text: "This place is boring awesome",
@@ -32,7 +31,6 @@ function seedDB(){
                     } else {
                         campground.comments.push(comment);
                         campground.save();
-                        console.log("created a comment");
                     }
                 })
             }
