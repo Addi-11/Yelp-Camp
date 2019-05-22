@@ -2,6 +2,7 @@ var express     = require("express"),
         app     = express(), 
    bodyParser   = require("body-parser"),
    mongoose     = require("mongoose"),
+   flash        = require("connect-flash"),
    passport     = require("passport"),
    LocalStrategy= require("passport-local"),
    Campground   = require("./models/campgrounds"),
@@ -19,6 +20,7 @@ var commentRoutes    = require("./routes/comments"),
 mongoose.connect("mongodb://localhost/yelp_camp", {useNewUrlParser: true});   
 
 app.use(methodOverride("_method"));
+app.use(flash());
 
 // PASSPORT CONFIG
 app.use(require("express-session")({
