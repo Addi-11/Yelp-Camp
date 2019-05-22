@@ -2,6 +2,7 @@ var express = require("express");
 var router = express.Router();
 var Campground = require("../models/campgrounds.js");
 var user = require("../models/user.js");
+var middlewareObj = require("../middleware/index.js");
 
 router.get("/campgrounds",function(req,res){
     
@@ -15,7 +16,7 @@ router.get("/campgrounds",function(req,res){
     })
 });
 
-router.post("/campgrounds",isLoggedIn,function(req,res){
+router.post("/campgrounds",middlewareObj.isLoggedIn,function(req,res){
 
     //add data to the campgrounds db
     var name = req.body.name;
@@ -33,7 +34,7 @@ router.post("/campgrounds",isLoggedIn,function(req,res){
     });
 });
 
-router.get("/campgrounds/new",isLoggedIn, function(req,res){
+router.get("/campgrounds/new",middlewareObj.isLoggedIn, function(req,res){
     res.render("campgrounds/new");
 });
 
@@ -97,12 +98,6 @@ router.delete("/campgrounds/:id", function(req,res){
     })
 })
 
-//middleware
-function isLoggedIn(req,res, next){ 
-    if(req.isAuthenticated()){
-        return next();
-    }
-    res.redirect("/login");
-}
+
 
 module.exports = router;
