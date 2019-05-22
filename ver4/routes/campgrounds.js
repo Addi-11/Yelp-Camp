@@ -1,6 +1,7 @@
 var express = require("express");
 var router = express.Router();
 var Campground = require("../models/campgrounds.js");
+var user = require("../models/user.js");
 
 router.get("/campgrounds",function(req,res){
     
@@ -51,13 +52,26 @@ router.get("/campgrounds/:id", function(req, res){
 
 //EDIT ROUTE
 router.get("/campgrounds/:id/edit",function(req,res){
-    Campground.findById(req.params.id , function(err, foundCampground){
-        if(err){
-            res.redirect("/campgrounds");
-        } else{
-            res.render("campgrounds/edit", {campground : foundCampground});
-        }
-    })
+  
+    if(req.isAuthenticated()){
+        Campground.findById(req.params.id , function(err, foundCampground){
+            if(err){
+                res.redirect("/campgrounds");
+            } else{
+                console.log(foundCampground.author.id);
+                console.log(req.user._id);
+                //does the user own the campground
+                //if(foundCampground.author.id.equals(req.user._id)){
+                    res.render("campgrounds/edit", {campground : foundCampground});
+               /* } else {
+                    res.send("not allowed");
+                }*/
+            }
+        })
+    } else {
+        console.log("YOU GOTTA LOGIN TO DO THAT!!");
+        res.send("YOU GOTTA LOGIN TO DO THAT!!");
+    }
 });
 
 //UPDATE ROUTE
