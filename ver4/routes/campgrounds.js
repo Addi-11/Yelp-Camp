@@ -71,7 +71,7 @@ router.get("/campgrounds/:id/edit",function(req,res){
         })
     } else {
         console.log("YOU GOTTA LOGIN TO DO THAT!!");
-        res.send("YOU GOTTA LOGIN TO DO THAT!!");
+        res.redirect("/login");
     }
 });
 
